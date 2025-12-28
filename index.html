@@ -72,9 +72,16 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .card-violet-glow {
-            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-color 0.2s ease;
+        /* Effet 3D de base */
+        .asset-card {
+            transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
             transform-style: preserve-3d;
+            will-change: transform;
+        }
+        
+        .card-violet-glow:hover {
+            box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.25);
+            border-color: rgba(168, 85, 247, 0.4);
         }
 
         .bg-blob { filter: blur(80px); opacity: 0.15; z-index: -1; }
@@ -89,7 +96,6 @@
         .particle { position: fixed; background: currentColor; border-radius: 2px; pointer-events: none; z-index: -1; }
         body.loading { overflow: hidden; }
         
-        /* Language Dropdown */
         .lang-dropdown {
             opacity: 0; visibility: hidden; transform: translateY(-10px);
             transition: all 0.3s ease;
@@ -240,7 +246,7 @@
             </div>
             <div class="flex items-center space-x-6">
                 <a href="https://github.com/bonjourdev" target="_blank" class="text-slate-400 hover:text-accent transition text-xl"><i class="fa-brands fa-github"></i></a>
-                <a href="https://www.youtube.com/@offbonjour" target="_blank" class="text-slate-400 hover:text-accent transition text-xl"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://www.youtube.com/@offbonjour" target="_blank" class="text-slate-400 hover:text-[#FF0000] transition text-xl"><i class="fa-brands fa-youtube"></i></a>
                 <a href="https://dsc.gg/bjr" target="_blank" class="text-slate-400 hover:text-accent transition text-xl"><i class="fa-brands fa-discord"></i></a>
             </div>
         </div>
@@ -248,6 +254,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // TRADUCTIONS
         const translations = {
             en: {
                 "nav-home": "Home", "nav-assets": "Assets", "nav-about": "About",
@@ -347,7 +354,7 @@
             const icons = ["fa-bullhorn", "fa-window-restore", "fa-comments", "fa-spinner", "fa-video", "fa-circle-dollar-to-slot", "fa-gauge-high", "fa-shield-halved"];
             
             grid.innerHTML = translations[lang].assets.map((asset, i) => `
-                <div class="asset-card bg-cardLight dark:bg-cardDark border border-black/5 dark:border-white/5 rounded-2xl p-6 card-violet-glow group" data-aos="fade-up">
+                <div class="asset-card bg-cardLight dark:bg-cardDark border border-black/5 dark:border-white/5 rounded-2xl p-6 card-violet-glow group shadow-sm" data-aos="fade-up">
                     <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center text-accent mb-4 group-hover:bg-accent group-hover:text-white transition-all duration-500 group-hover:rotate-[360deg]">
                         <i class="fa-solid ${icons[i]} text-lg"></i>
                     </div>
@@ -362,10 +369,11 @@
             `).join('');
         }
 
+        // LOADER
         window.addEventListener('DOMContentLoaded', () => {
             const loader = document.getElementById('loader');
             const loaderText = document.getElementById('loader-text');
-            setLanguage('en'); 
+            setLanguage('en');
 
             setTimeout(() => {
                 loaderText.classList.add('reveal-anim');
@@ -382,11 +390,13 @@
             }, 4500);
         });
 
+        // PARALLAX, PARTICLES & 3D CARDS
         const cursorGlow = document.getElementById('cursor-glow');
         const blobs = [document.getElementById('blob-1'), document.getElementById('blob-2')];
         const particleContainer = document.getElementById('particles-container');
         const particles = [];
 
+        // Init Particles
         for (let i = 0; i < 40; i++) {
             const p = document.createElement('div');
             p.className = 'particle animate-twinkle text-slate-400 dark:text-white';
@@ -410,13 +420,38 @@
         }
         updateParticles();
 
+        // Mouse Move Event for Glow, Blobs and 3D Cards
         document.addEventListener('mousemove', (e) => {
             const { clientX, clientY } = e;
+            
+            // Cursor Glow
             cursorGlow.style.left = `${clientX}px`;
             cursorGlow.style.top = `${clientY}px`;
+            
+            // Background Blobs
             blobs.forEach((blob, index) => {
                 const speed = (index + 1) * 30;
                 blob.style.transform = `translate(${(window.innerWidth / 2 - clientX) / speed}px, ${(window.innerHeight / 2 - clientY) / speed}px)`;
+            });
+
+            // 3D Tilt for Cards (Re-added logic)
+            const cards = document.querySelectorAll('.asset-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
+                
+                // Si la souris est sur la carte
+                if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 10; // Sensibilité
+                    const rotateY = (centerX - x) / 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+                } else {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                }
             });
         });
     </script>
