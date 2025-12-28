@@ -16,7 +16,7 @@
                 extend: {
                     colors: {
                         roblox: '#00BFFF', /* Bleu de base */
-                        accent: '#00E5FF', /* Nouveau Cyan */
+                        accent: '#00E5FF', /* Cyan Électrique */
                         dark: '#0B0F1A',
                         light: '#F8FAFC',
                         cardDark: '#161B2E',
@@ -34,7 +34,7 @@
     <style>
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #00E5FF; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #00BFFF, #00E5FF); border-radius: 4px; }
         
         .glass-nav { 
             background: rgba(248, 250, 252, 0.8); 
@@ -53,8 +53,9 @@
             animation: smoothZoomFade 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
+        /* MODIFIED GRADIENT FOR MORE DEPTH */
         .text-gradient {
-            background: linear-gradient(135deg, #00BFFF 0%, #00E5FF 100%);
+            background: linear-gradient(135deg, #0080FF 0%, #00FFFF 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 200% 200%;
@@ -68,7 +69,7 @@
         }
 
         .btn-gradient {
-            background: linear-gradient(135deg, #00BFFF 0%, #00E5FF 100%);
+            background: linear-gradient(135deg, #0080FF 0%, #00FFFF 100%);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -78,8 +79,8 @@
             will-change: transform;
         }
         
-        .card-blue-glow:hover {
-            box-shadow: 0 25px 50px -12px rgba(0, 229, 255, 0.25);
+        .card-violet-glow:hover {
+            box-shadow: 0 25px 50px -12px rgba(0, 229, 255, 0.15);
             border-color: rgba(0, 229, 255, 0.4);
         }
 
@@ -100,6 +101,16 @@
             transition: all 0.3s ease;
         }
         .group:hover .lang-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        /* Modal Styles */
+        #assets-modal {
+            backdrop-filter: blur(8px);
+        }
+        .filter-btn.active {
+            background: #00E5FF;
+            color: #0B0F1A;
+            border-color: #00E5FF;
+        }
     </style>
 </head>
 <body class="loading bg-light dark:bg-dark text-slate-600 dark:text-slate-300 font-sans selection:bg-accent selection:text-white overflow-x-hidden transition-colors duration-500">
@@ -116,7 +127,7 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
                     <a href="#">
-                        <img src="https://i.imgur.com/xdSIeZo.png" alt="Bonjour Logo" class="h-8 md:h-10 w-auto object-contain hover:opacity-80 transition-opacity">
+                        <img src="https://i.imgur.com/xdSIeZo.png" alt="Bonjour Logo" class="h-6 md:h-8 w-auto object-contain hover:opacity-80 transition-opacity">
                     </a>
                 </div>
                 
@@ -129,14 +140,7 @@
                         <div class="lang-dropdown absolute top-full right-0 mt-2 w-40 bg-white dark:bg-cardDark border border-black/5 dark:border-white/10 rounded-xl shadow-xl overflow-hidden py-2">
                             <button onclick="setLanguage('en')" class="w-full px-4 py-2 text-left hover:bg-accent/10 flex items-center gap-3 text-sm"><span>🇺🇸</span> English</button>
                             <button onclick="setLanguage('fr')" class="w-full px-4 py-2 text-left hover:bg-accent/10 flex items-center gap-3 text-sm"><span>🇫🇷</span> Français</button>
-                            <button onclick="setLanguage('es')" class="w-full px-4 py-2 text-left hover:bg-accent/10 flex items-center gap-3 text-sm"><span>🇪🇸</span> Español</button>
-                            <button onclick="setLanguage('de')" class="w-full px-4 py-2 text-left hover:bg-accent/10 flex items-center gap-3 text-sm"><span>🇩🇪</span> Deutsch</button>
-                            <button onclick="setLanguage('it')" class="w-full px-4 py-2 text-left hover:bg-accent/10 flex items-center gap-3 text-sm"><span>🇮🇹</span> Italiano</button>
-                            <button onclick="setLanguage('ja')" class="w-full px-4 py-2 text-left hover:bg-accent/10 flex items-center gap-3 text-sm"><span>🇯🇵</span> 日本語</button>
-                            <button onclick="setLanguage('ko')" class="w-full px-4 py-2 text-left hover:bg-accent/10 flex items-center gap-3 text-sm"><span>🇰🇷</span> 한국어</button>
-                            <button onclick="setLanguage('zh')" class="w-full px-4 py-2 text-left hover:bg-accent/10 flex items-center gap-3 text-sm"><span>🇨🇳</span> 中国人</button>
-                            <button onclick="setLanguage('ru')" class="w-full px-4 py-2 text-left hover:bg-accent/10 flex items-center gap-3 text-sm"><span>🇷🇺</span> Русский</button>
-                        </div>
+                            </div>
                     </div>
 
                     <a href="#home" data-i18n="nav-home" class="hover:text-accent transition text-sm font-medium">Home</a>
@@ -183,10 +187,60 @@
                 <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-4" data-i18n="assets-title">Available Assets</h2>
                 <div class="h-1 w-20 bg-accent mx-auto rounded-full"></div>
             </div>
-            <div id="assets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <div id="assets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 </div>
+
+            <div class="flex justify-center" data-aos="fade-up">
+                <button onclick="openAssetModal()" class="group relative px-8 py-3 rounded-xl bg-cardLight dark:bg-cardDark border border-black/10 dark:border-white/10 text-slate-900 dark:text-white font-bold hover:border-accent transition-all duration-300">
+                    <span class="relative z-10 flex items-center gap-2">
+                        View All Assets <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                    <div class="absolute inset-0 rounded-xl bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </button>
+            </div>
         </div>
     </section>
+
+    <div id="assets-modal" class="fixed inset-0 z-[60] bg-dark/80 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-light dark:bg-[#0F121D] w-full max-w-6xl h-[90vh] rounded-2xl border border-white/10 shadow-2xl flex flex-col overflow-hidden transform scale-95 transition-transform duration-300" id="modal-content">
+            
+            <div class="p-6 border-b border-black/5 dark:border-white/5 flex justify-between items-center bg-white/50 dark:bg-black/20 backdrop-blur-md">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">All Resources</h3>
+                    <p class="text-xs text-slate-500 font-mono">LIBRARY_V2.0</p>
+                </div>
+                <button onclick="closeAssetModal()" class="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 hover:bg-red-500/20 hover:text-red-500 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 border-b border-black/5 dark:border-white/5 flex flex-col md:flex-row gap-4 justify-between items-center bg-slate-50/50 dark:bg-[#161B2E]/50">
+                <div class="flex flex-wrap gap-2 justify-center md:justify-start" id="tag-filters">
+                    <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="All">All</button>
+                    <button class="filter-btn px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent text-slate-500 hover:text-accent transition-colors" data-filter="UI">UI</button>
+                    <button class="filter-btn px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent text-slate-500 hover:text-accent transition-colors" data-filter="System">System</button>
+                    <button class="filter-btn px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent text-slate-500 hover:text-accent transition-colors" data-filter="Security">Security</button>
+                    <button class="filter-btn px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent text-slate-500 hover:text-accent transition-colors" data-filter="Camera">Camera</button>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Sort by:</span>
+                    <select id="sort-select" onchange="renderModalAssets()" class="bg-transparent text-sm font-semibold text-slate-700 dark:text-slate-300 border border-black/10 dark:border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:border-accent">
+                        <option value="default">Default</option>
+                        <option value="version-new">Version (Newest)</option>
+                        <option value="version-old">Version (Oldest)</option>
+                        <option value="az">Name (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-6 bg-slate-100/50 dark:bg-black/20 custom-scrollbar">
+                <div id="modal-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    </div>
+            </div>
+        </div>
+    </div>
 
     <section id="about" class="py-24 border-t border-black/5 dark:border-white/5 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4">
@@ -256,7 +310,15 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        //-----------------------------------------------------TRANSLATIONS-----------------------------------------------------\\
+        //-----------------------------------------------------TRANSLATIONS & DATA-----------------------------------------------------\\
+        
+        // ICONS MAPPING FOR ASSETS
+        const assetIcons = {
+            "BJDR": "fa-bullhorn", "BluredMenu": "fa-window-restore", "ChatToDiscord": "fa-brands fa-discord", 
+            "Loading Screen": "fa-spinner", "Realistic Head-Camera": "fa-video", "Topbar Donation": "fa-circle-dollar-to-slot", 
+            "VisualFPS": "fa-gauge-high", "Whitelist System": "fa-shield-halved"
+        };
+
         const translations = {
             en: {
                 "nav-home": "Home", "nav-assets": "Assets", "nav-about": "About",
@@ -268,224 +330,143 @@
                 "f1": "Direct Downloads", "f2": "No Viruses / Clean Code", "f3": "Optimized for High Latency",
                 "download": "Download",
                 assets: [
-                    { name: "BJDR", desc: "Advanced global announcement." },
-                    { name: "BluredMenu", desc: "Roblox menu with blur effects." },
-                    { name: "ChatToDiscord", desc: "Relay game chat to Discord." },
-                    { name: "Loading Screen", desc: "Smooth introduction for players." },
-                    { name: "Realistic Head-Camera", desc: "Immersive avatar experience." },
-                    { name: "Topbar Donation", desc: "Easy donation buttons." },
-                    { name: "VisualFPS", desc: "Clean performance HUD." },
-                    { name: "Whitelist System", desc: "Secure access control." }
+                    { name: "BJDR", desc: "Advanced global announcement.", tags: ["System", "UI"], version: "2.0.0" },
+                    { name: "BluredMenu", desc: "Roblox menu with blur effects.", tags: ["UI", "Design"], version: "1.0.0" },
+                    { name: "ChatToDiscord", desc: "Relay game chat to Discord.", tags: ["System", "Webhooks"], version: "1.0.0" },
+                    { name: "Loading Screen", desc: "Smooth introduction for players.", tags: ["UI"], version: "1.0.0" },
+                    { name: "Realistic Head-Camera", desc: "Immersive avatar experience.", tags: ["Camera", "Immersion"], version: "1.0.0" },
+                    { name: "Topbar Donation", desc: "Easy donation buttons.", tags: ["UI", "Economy"], version: "1.0.0" },
+                    { name: "VisualFPS", desc: "Clean performance HUD.", tags: ["UI", "System"], version: "1.0.0" },
+                    { name: "Whitelist System", desc: "Secure access control.", tags: ["Security", "System"], version: "1.0.0" }
                 ]
             },
-            fr: {
-                "nav-home": "Accueil", "nav-assets": "Assets", "nav-about": "À propos",
-                "badge": "Projet Open Source Roblox", "hero-title": "Ressources.",
-                "hero-desc": "Propulser la communauté Roblox avec des scripts enrichis gratuitement. Performance, code propre et gratuit.",
-                "btn-explore": "Explorer les Assets", "btn-community": "Rejoindre la Communauté",
-                "assets-title": "Assets Disponibles", "about-title": "Tout est Open Source.",
-                "about-desc": "Bonjour. n'est pas qu'un répertoire, c'est un engagement envers la qualité. Pas besoin de Robux.",
-                "f1": "Téléchargements Directs", "f2": "Sans Virus / Code Propre", "f3": "Optimisé pour la latence",
-                "download": "Télécharger",
-                assets: [
-                    { name: "BJDR", desc: "Annonces globales avancées." },
-                    { name: "BluredMenu", desc: "Menu Roblox avec effets de flou." },
-                    { name: "ChatToDiscord", desc: "Relais chat vers Discord." },
-                    { name: "Loading Screen", desc: "Introduction fluide pour les joueurs." },
-                    { name: "Realistic Head-Camera", desc: "Expérience immersive d'avatar." },
-                    { name: "Topbar Donation", desc: "Boutons de donation faciles." },
-                    { name: "VisualFPS", desc: "HUD de performance épuré." },
-                    { name: "Whitelist System", desc: "Contrôle d'accès sécurisé." }
-                ]
-            },
-            es: {
-                "nav-home": "Inicio", "nav-assets": "Recursos", "nav-about": "Sobre nosotros",
-                "badge": "Proyecto de código abierto Roblox", "hero-title": "Recursos.",
-                "hero-desc": "Empoderando a la comunidad de Roblox con scripts mejorados gratis. Alto rendimiento y código limpio.",
-                "btn-explore": "Explorar Recursos", "btn-community": "Unirse a la Comunidad",
-                "assets-title": "Recursos Disponibles", "about-title": "Todo es Código Abierto.",
-                "about-desc": "Bonjour. no es solo un repositorio, es un compromiso con la calidad. Sin robux ni barreras.",
-                "f1": "Descargas Directas", "f2": "Sin Virus / Código Limpio", "f3": "Optimizado para latencia",
-                "download": "Descargar",
-                assets: [
-                    { name: "BJDR", desc: "Anuncios globales avanzados." },
-                    { name: "BluredMenu", desc: "Menú Roblox con efectos blur." },
-                    { name: "ChatToDiscord", desc: "Relais de chat a Discord." },
-                    { name: "Loading Screen", desc: "Introducción fluida para jugadores." },
-                    { name: "Realistic Head-Camera", desc: "Experiencia inmersiva." },
-                    { name: "Topbar Donation", desc: "Botones de donación fáciles." },
-                    { name: "VisualFPS", desc: "HUD de rendimiento limpio." },
-                    { name: "Whitelist System", desc: "Control de acceso seguro." }
-                ]
-            },
-            de: {
-                "nav-home": "Startseite", "nav-assets": "Ressourcen", "nav-about": "Über uns",
-                "badge": "Roblox Open-Source-Projekt", "hero-title": "Ressourcen.",
-                "hero-desc": "Kostenlose Premium-Skripte für die Roblox-Community. Hohe Leistung, sauberer Code und völlig kostenlos.",
-                "btn-explore": "Ressourcen entdecken", "btn-community": "Community beitreten",
-                "assets-title": "Verfügbare Skripte", "about-title": "Alles ist Open Source.",
-                "about-desc": "Bonjour. ist mehr als nur ein Repository, es ist ein Versprechen für Qualität. Ohne Robux, ohne Barrieren.",
-                "f1": "Direkt-Downloads", "f2": "Virenfrei / Sauberer Code", "f3": "Optimiert für hohe Latenz",
-                "download": "Herunterladen",
-                assets: [
-                    { name: "BJDR", desc: "Erweitertes globales Ankündigungssystem." },
-                    { name: "BluredMenu", desc: "Roblox-Menü mit Unschärfe-Effekten." },
-                    { name: "ChatToDiscord", desc: "Spiel-Chat an Discord weiterleiten." },
-                    { name: "Loading Screen", desc: "Flüssiger Ladebildschirm für Spieler." },
-                    { name: "Realistic Head-Camera", desc: "Immersives Avatar-Erlebnis." },
-                    { name: "Topbar Donation", desc: "Einfache Spenden-Buttons." },
-                    { name: "VisualFPS", desc: "Schlankes Performance-HUD." },
-                    { name: "Whitelist System", desc: "Sichere Zugriffskontrolle." }
-                ]
-            },
-            it: {
-                "nav-home": "Home", "nav-assets": "Risorse", "nav-about": "Chi siamo",
-                "badge": "Progetto Open Source Roblox", "hero-title": "Risorse.",
-                "hero-desc": "Potenzia la community di Roblox con script gratuiti di alta qualità. Performance elevate e codice pulito.",
-                "btn-explore": "Esplora Risorse", "btn-community": "Unisciti alla Community",
-                "assets-title": "Risorse Disponibili", "about-title": "Tutto è Open Source.",
-                "about-desc": "Bonjour. non è solo una repository, è un impegno verso la qualità. Niente Robux, nessuna barriera.",
-                "f1": "Download Diretti", "f2": "Senza Virus / Codice Pulito", "f3": "Ottimizzato per la latenza",
-                "download": "Scarica",
-                assets: [
-                    { name: "BJDR", desc: "Sistema di annunci globali avanzato." },
-                    { name: "BluredMenu", desc: "Menu Roblox con effetti di sfocatura." },
-                    { name: "ChatToDiscord", desc: "Invia la chat di gioco a Discord." },
-                    { name: "Loading Screen", desc: "Schermata di caricamento fluida." },
-                    { name: "Realistic Head-Camera", desc: "Esperienza avatar immersiva." },
-                    { name: "Topbar Donation", desc: "Semplici pulsanti per donazioni." },
-                    { name: "VisualFPS", desc: "HUD delle prestazioni pulito." },
-                    { name: "Whitelist System", desc: "Controllo degli accessi sicuro." }
-                ]
-            },
-            ja: {
-                "nav-home": "ホーム", "nav-assets": "スクリプト", "nav-about": "詳細",
-                "badge": "Roblox オープンソースプロジェクト", "hero-title": "リソース。",
-                "hero-desc": "Robloxコミュニティに高品質なスクリプトを無料で提供。高性能、クリーンなコード、完全無料。",
-                "btn-explore": "スクリプトを見る", "btn-community": "コミュニティに参加",
-                "assets-title": "利用可能なスクリプト", "about-title": "すべてがオープンソース。",
-                "about-desc": "Bonjour. は単なるリポジトリではなく、品質へのこだわりです。Robuxは不要、制限もありません。",
-                "f1": "直接ダウンロード", "f2": "ウイルスなし / 清潔なコード", "f3": "高レイテンシへの最適化",
-                "download": "ダウンロード",
-                assets: [
-                    { name: "BJDR", desc: "高度なグローバルアナウンスシステム。" },
-                    { name: "BluredMenu", desc: "ブラー効果付きのUIメニュー。" },
-                    { name: "ChatToDiscord", desc: "ゲーム内チャットをDiscordに連携。" },
-                    { name: "Loading Screen", desc: "プレイヤー向けの滑らかなロード画面。" },
-                    { name: "Realistic Head-Camera", desc: "没入感のあるヘッドカメラ体験。" },
-                    { name: "Topbar Donation", desc: "簡単な寄付ボタン。" },
-                    { name: "VisualFPS", desc: "シンプルなパフォーマンスHUD。" },
-                    { name: "Whitelist System", desc: "安全なホワイトリスト管理。" }
-                ]
-            },
-            ko: {
-                "nav-home": "홈", "nav-assets": "스크립트", "nav-about": "정보",
-                "badge": "Roblox 오픈 소스 프로젝트", "hero-title": "리소스 센터.",
-                "hero-desc": "Roblox 커뮤니티를 위한 고성능 무료 스크립트. 깔끔한 코드와 최상의 최적화.",
-                "btn-explore": "스크립트 탐색", "btn-community": "커뮤니티 가입",
-                "assets-title": "사용 가능한 스크립트", "about-title": "모든 코드는 오픈 소스입니다.",
-                "about-desc": "Bonjour. 는 단순한 저장소가 아닌 품질에 대한 약속입니다. Robux나 다른 조건 없이 사용하세요.",
-                "f1": "직접 다운로드", "f2": "바이러스 없음 / 클린 코드", "f3": "높은 핑 환경 최적화",
-                "download": "다운로드",
-                assets: [
-                    { name: "BJDR", desc: "고급 글로벌 공지 시스템." },
-                    { name: "BluredMenu", desc: "블러 효과가 적용된 UI 메뉴." },
-                    { name: "ChatToDiscord", desc: "게임 채팅을 Discord로 전달." },
-                    { name: "Loading Screen", desc: "부드러운 플레이어 로딩 화면." },
-                    { name: "Realistic Head-Camera", desc: "몰입형 헤드 카메라 경험." },
-                    { name: "Topbar Donation", desc: "간편한 후원 버튼." },
-                    { name: "VisualFPS", desc: "깔끔한 성능 표시 HUD." },
-                    { name: "Whitelist System", desc: "안전한 화이트리스트 시스템." }
-                ]
-            },
-            zh: {
-                "nav-home": "首页", "nav-assets": "脚本资源", "nav-about": "关于我们",
-                "badge": "Roblox 开源项目", "hero-title": "资源中心。",
-                "hero-desc": "为 Roblox 社区免费提供功能强大的脚本。高性能、代码简洁、零成本。",
-                "btn-explore": "探索脚本", "btn-community": "加入社区",
-                "assets-title": "可用资源", "about-title": "一切皆为开源。",
-                "about-desc": "Bonjour. 不仅仅是一个 GitHub 代码库，更代表着对品质的承诺。无需 Robux，零门槛使用。",
-                "f1": "直接下载", "f2": "无病毒 / 代码整洁", "f3": "高延迟环境优化",
-                "download": "下载",
-                assets: [
-                    { name: "BJDR", desc: "高级全局公告系统。" },
-                    { name: "BluredMenu", desc: "带有模糊特效的 UI 菜单。" },
-                    { name: "ChatToDiscord", desc: "将游戏聊天同步至 Discord。" },
-                    { name: "Loading Screen", desc: "流畅的玩家加载界面。" },
-                    { name: "Realistic Head-Camera", desc: "沉浸式头部跟随摄像机。" },
-                    { name: "Topbar Donation", desc: "顶栏快捷捐赠按钮。" },
-                    { name: "VisualFPS", desc: "简洁的性能显示 HUD。" },
-                    { name: "Whitelist System", desc: "安全的白名单访问控制。" }
-                ]
-            },
-            ru: {
-                "nav-home": "Главная", "nav-assets": "Ресурсы", "nav-about": "О нас",
-                "badge": "Open Source проект Roblox", "hero-title": "Ресурсы.",
-                "hero-desc": "Развитие сообщества Roblox с помощью бесплатных скриптов. Высокая производительность и чистый код.",
-                "btn-explore": "Исследовать ресурсы", "btn-community": "Присоединиться",
-                "assets-title": "Доступные ресурсы", "about-title": "Всё в открытом доступе.",
-                "about-desc": "Bonjour. — это не просто репозиторий, это стремление к качеству. Без робуксов.",
-                "f1": "Прямая загрузка", "f2": "Без вирусов / Чистый код", "f3": "Оптимизировано для пинга",
-                "download": "Скачать",
-                assets: [
-                    { name: "BJDR", desc: "Продвинутые объявления." },
-                    { name: "BluredMenu", desc: "Меню Roblox с эффектом размытия." },
-                    { name: "ChatToDiscord", desc: "Ретрансляция чата в Discord." },
-                    { name: "Loading Screen", desc: "Плавная загрузка для игроков." },
-                    { name: "Realistic Head-Camera", desc: "Иммерсивный опыт." },
-                    { name: "Topbar Donation", desc: "Простые кнопки пожертвований." },
-                    { name: "VisualFPS", desc: "Чистый HUD производительности." },
-                    { name: "Whitelist System", desc: "Защищенный контроль доступа." }
-                ]
-            }
+            
         };
 
-        const flags = { 
-            en: "🇺🇸", fr: "🇫🇷", es: "🇪🇸", ru: "🇷🇺", 
-            zh: "🇨🇳", de: "🇩🇪", it: "🇮🇹", ja: "🇯🇵", ko: "🇰🇷" 
-        };
-        
-        const langNames = { 
-            en: "English", fr: "Français", es: "Español", ru: "Русский", 
-            zh: "中文", de: "Deutsch", it: "Italiano", ja: "日本語", ko: "한국어" 
-        };
+        const flags = { en: "🇺🇸", fr: "🇫🇷", es: "🇪🇸", ru: "🇷🇺", zh: "🇨🇳", de: "🇩🇪", it: "🇮🇹", ja: "🇯🇵", ko: "🇰🇷" };
+        const langNames = { en: "English", fr: "Français", es: "Español", ru: "Русский", zh: "中文", de: "Deutsch", it: "Italiano", ja: "日本語", ko: "한국어" };
+
+        let currentLang = 'en';
+        let currentFilter = 'All';
+        let currentSort = 'default';
+
+        function getCardHTML(asset, downloadText) {
+            const icon = assetIcons[asset.name] || "fa-box";
+            return `
+                <div class="asset-card bg-cardLight dark:bg-cardDark border border-black/5 dark:border-white/5 rounded-2xl p-6 card-violet-glow group shadow-sm h-full flex flex-col relative overflow-hidden" data-aos="fade-up">
+                    <div class="absolute top-4 right-4 flex gap-1">
+                        ${asset.tags ? asset.tags.map(t => `<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-accent/10 text-accent uppercase tracking-wider">${t}</span>`).join('') : ''}
+                    </div>
+                    <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center text-accent mb-4 group-hover:bg-accent group-hover:text-white transition-all duration-500 group-hover:rotate-[360deg] shrink-0">
+                        <i class="fa-solid ${icon} text-lg"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">${asset.name}</h3>
+                    <p class="text-[10px] font-mono text-accent/60 mb-2 uppercase tracking-widest">v${asset.version}</p>
+                    <p class="text-slate-500 text-xs mb-6 leading-relaxed flex-grow">${asset.desc}</p>
+                    <a href="https://github.com/bonjourdev/website/raw/refs/heads/main/assets/${encodeURIComponent(asset.name)}.rbxm" 
+                       class="mt-auto w-full py-2.5 bg-black/5 dark:bg-white/5 hover:bg-accent hover:text-white text-slate-600 dark:text-slate-300 text-xs font-bold rounded-lg transition-all text-center block">
+                       <i class="fa-solid fa-download mr-2"></i> ${downloadText}
+                    </a>
+                </div>
+            `;
+        }
 
         function setLanguage(lang) {
+            currentLang = lang;
             document.getElementById('current-flag').textContent = flags[lang];
             document.getElementById('current-lang').textContent = langNames[lang];
             
+            // Update Text
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                el.innerHTML = translations[lang][key];
+                if(translations[lang][key]) el.innerHTML = translations[lang][key];
             });
 
+            // Update Main Grid (Only first 4)
             const grid = document.getElementById('assets-grid');
-            const icons = ["fa-bullhorn", "fa-window-restore", "fa-comments", "fa-spinner", "fa-video", "fa-circle-dollar-to-slot", "fa-gauge-high", "fa-shield-halved"];
-            
-            grid.innerHTML = translations[lang].assets.map((asset, i) => `
-                <div class="asset-card bg-cardLight dark:bg-cardDark border border-black/5 dark:border-white/5 rounded-2xl p-6 card-blue-glow group shadow-sm" data-aos="fade-up">
-                    <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center text-accent mb-4 group-hover:bg-accent group-hover:text-white transition-all duration-500 group-hover:rotate-[360deg]">
-                        <i class="fa-solid ${icons[i]} text-lg"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">${asset.name}</h3>
-                    <p class="text-[10px] font-mono text-accent/60 mb-2 uppercase tracking-widest">1.0.0</p>
-                    <p class="text-slate-500 text-xs mb-6 leading-relaxed h-8">${asset.desc}</p>
-                    <a href="https://github.com/bonjourdev/website/raw/refs/heads/main/assets/${encodeURIComponent(asset.name)}.rbxm" 
-                       class="w-full py-2.5 bg-black/5 dark:bg-white/5 hover:bg-accent hover:text-white text-slate-600 dark:text-slate-300 text-xs font-bold rounded-lg transition-all text-center block">
-                       <i class="fa-solid fa-download mr-2"></i> ${translations[lang].download}
-                    </a>
-                </div>
-            `).join('');
+            const mainAssets = translations[lang].assets.slice(0, 4);
+            grid.innerHTML = mainAssets.map(asset => getCardHTML(asset, translations[lang].download)).join('');
         }
 
+        //-----------------------------------------------------MODAL LOGIC-----------------------------------------------------\\
+        
+        function openAssetModal() {
+            const modal = document.getElementById('assets-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            // Trigger reflow
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+            document.body.style.overflow = 'hidden'; // Prevent body scroll
+            renderModalAssets();
+        }
+
+        function closeAssetModal() {
+            const modal = document.getElementById('assets-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function renderModalAssets() {
+            const grid = document.getElementById('modal-grid');
+            let assets = [...translations[currentLang].assets]; // Clone array
+
+            // Filter
+            if (currentFilter !== 'All') {
+                assets = assets.filter(a => a.tags && a.tags.includes(currentFilter));
+            }
+
+            // Sort
+            currentSort = document.getElementById('sort-select').value;
+            if (currentSort === 'az') {
+                assets.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (currentSort === 'version-new') {
+                // Simple semantic version compare
+                assets.sort((a, b) => b.version.localeCompare(a.version, undefined, { numeric: true }));
+            } else if (currentSort === 'version-old') {
+                assets.sort((a, b) => a.version.localeCompare(b.version, undefined, { numeric: true }));
+            }
+
+            if(assets.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-20 text-slate-500">No assets found with this filter.</div>`;
+            } else {
+                grid.innerHTML = assets.map(asset => getCardHTML(asset, translations[currentLang].download)).join('');
+            }
+        }
+
+        // Filter Buttons Logic
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.remove('bg-accent', 'text-white');
+                    b.classList.add('text-slate-500');
+                });
+                
+                e.target.classList.add('active');
+                e.target.classList.remove('text-slate-500');
+                
+                currentFilter = e.target.getAttribute('data-filter');
+                renderModalAssets();
+            });
+        });
+
+        //-----------------------------------------------------INIT-----------------------------------------------------\\
+        
         window.addEventListener('DOMContentLoaded', () => {
             const loader = document.getElementById('loader');
             const loaderText = document.getElementById('loader-text');
             setLanguage('en');
 
-            setTimeout(() => {
-                loaderText.classList.add('reveal-anim');
-            }, 500);
+            setTimeout(() => { loaderText.classList.add('reveal-anim'); }, 500);
 
             setTimeout(() => {
                 loader.classList.add('opacity-0');
@@ -497,6 +478,7 @@
             }, 3500);
         });
 
+        // ... Existing Particle & Mouse Logic ...
         const cursorGlow = document.getElementById('cursor-glow');
         const blobs = [document.getElementById('blob-1'), document.getElementById('blob-2')];
         const particleContainer = document.getElementById('particles-container');
@@ -527,27 +509,21 @@
 
         document.addEventListener('mousemove', (e) => {
             const { clientX, clientY } = e;
-            
             cursorGlow.style.left = `${clientX}px`;
             cursorGlow.style.top = `${clientY}px`;
-            
             blobs.forEach((blob, index) => {
                 const speed = (index + 1) * 30;
                 blob.style.transform = `translate(${(window.innerWidth / 2 - clientX) / speed}px, ${(window.innerHeight / 2 - clientY) / speed}px)`;
             });
-
+            // 3D Tilt Logic for Cards
             const cards = document.querySelectorAll('.asset-card');
             cards.forEach(card => {
                 const rect = card.getBoundingClientRect();
                 const x = clientX - rect.left;
                 const y = clientY - rect.top;
-                
                 if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    const rotateX = (y - centerY) / 10;
-                    const rotateY = (centerX - x) / 10;
-                    
+                    const rotateX = (y - rect.height/2) / 10;
+                    const rotateY = (rect.width/2 - x) / 10;
                     card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
                 } else {
                     card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
