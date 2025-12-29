@@ -39,5 +39,5 @@ Need help or want to suggest a new feature?
 
 ## 📜 License
 
-Distributed under the **MIT License**. See `LICENSE` for more information. 
+Distributed under the **CAC License**. See `LICENSE` for more information. 
 Built with ❤️ by **Bonjour.**
