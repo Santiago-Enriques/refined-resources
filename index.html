@@ -6,7 +6,7 @@
     <title>Bonjour.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <script>
@@ -198,23 +198,30 @@
                 </button>
             </div>
 
-            <div class="p-6 border-b border-black/5 dark:border-white/5 flex flex-col md:flex-row gap-4 justify-between items-center bg-slate-50/50 dark:bg-[#161B2E]/50">
-                <div class="flex flex-wrap gap-2 justify-center md:justify-start" id="tag-filters">
-                    <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="All">All</button>
-                    <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="UI">UI</button>
-                    <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="System">System</button>
-                    <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="Security">Security</button>
-                    <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="Avatar">Avatar</button>
-                    <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="Economy">Economy</button>
+            <div class="p-6 border-b border-black/5 dark:border-white/5 flex flex-col gap-4 bg-slate-50/50 dark:bg-[#161B2E]/50">
+                <div class="w-full relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10"></i>
+                    <input type="text" id="asset-search" placeholder="Search assets..." class="w-full pl-10 pr-4 py-3 bg-white dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl text-sm focus:outline-none focus:border-accent transition-colors text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500">
                 </div>
 
-                <div class="flex items-center gap-3">
-                    <span class="text-xs font-bold text-slate-400 uppercase">Sort by:</span>
-                    <select id="sort-select" onchange="renderModalAssets()" class="bg-transparent text-sm font-semibold text-slate-700 dark:text-slate-300 border border-black/10 dark:border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:border-accent">
-                        <option value="default">Version (Newest)</option>
-                        <option value="version-old">Version (Oldest)</option>
-                        <option value="az">Name (A-Z)</option>
-                    </select>
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex flex-wrap gap-2 justify-center md:justify-start" id="tag-filters">
+                        <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="All">All</button>
+                        <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="UI">UI</button>
+                        <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="System">System</button>
+                        <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="Security">Security</button>
+                        <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="Avatar">Avatar</button>
+                        <button class="filter-btn active px-4 py-1.5 rounded-lg text-sm font-medium border border-transparent hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-filter="Economy">Economy</button>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Sort by:</span>
+                        <select id="sort-select" onchange="renderModalAssets()" class="bg-transparent text-sm font-semibold text-slate-700 dark:text-slate-300 border border-black/10 dark:border-white/10 rounded-lg px-3 py-1.5 focus:outline-none focus:border-accent">
+                            <option value="default">Last Updated (Newest)</option>
+                            <option value="version-old">Last Updated (Oldest)</option>
+                            <option value="az">Name (A-Z)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -348,12 +355,13 @@
             const modal = document.getElementById('assets-modal');
             const content = document.getElementById('modal-content');
             modal.classList.remove('hidden');
-            void modal.offsetWidth; // trigger reflow
+            void modal.offsetWidth;
             modal.classList.remove('opacity-0');
             content.classList.remove('scale-95');
             content.classList.add('scale-100');
             document.body.style.overflow = 'hidden';
             renderModalAssets();
+            setTimeout(() => document.getElementById('asset-search').focus(), 100);
         }
 
         function closeAssetModal() {
@@ -371,13 +379,20 @@
         function renderModalAssets() {
             const grid = document.getElementById('modal-grid');
             let assets = [...assetsData];
+            const searchTerm = document.getElementById('asset-search').value.toLowerCase();
+
+            if (searchTerm) {
+                assets = assets.filter(a => 
+                    a.name.toLowerCase().includes(searchTerm) || 
+                    a.desc.toLowerCase().includes(searchTerm)
+                );
+            }
 
             if (currentFilter !== 'All') {
                 assets = assets.filter(a => a.tags && a.tags.includes(currentFilter));
             }
 
             currentSort = document.getElementById('sort-select').value;
-            
             if (currentSort === 'az') {
                 assets.sort((a, b) => a.name.localeCompare(b.name));
             } else if (currentSort === 'version-old') {
@@ -385,13 +400,14 @@
             } 
 
             if(assets.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-20 text-slate-500">No assets found with this filter.</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-20 text-slate-500">No assets found.</div>`;
             } else {
                 grid.innerHTML = assets.map(asset => getCardHTML(asset)).join('');
             }
         }
 
-        // Filter Buttons Logic
+        document.getElementById('asset-search').addEventListener('input', renderModalAssets);
+
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.filter-btn').forEach(b => {
