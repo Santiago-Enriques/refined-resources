@@ -28,5 +28,5 @@ Need help or want to suggest a new feature?
 
 ## 📜 License
 
-Distributed under the **CAC License**. See `LICENSE` for more information. 
-Built with ❤️ by **Bonjour.**
+Distributed under the **CAC License**. See `LICENSE` for more information.
+Built with ❤️ by **BonjourDev**
